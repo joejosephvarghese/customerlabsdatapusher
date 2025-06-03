@@ -55,6 +55,8 @@ Create a `.env` file in the project root directory and add:
 PORT=3000
 NODE_ENV=development
 
-[git clone https://github.com/YOUR_GITHUB_USERNAME/customerlabs-assingment-nodejs.git](https://github.com/joejosephvarghese/customerlabsdatapusher.git)
+```How to run
+https://github.com/joejosephvarghese/customerlabsdatapusher.git
 cd customerlabs-assingment-nodejs
+
 
