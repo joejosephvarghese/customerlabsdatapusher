@@ -13,8 +13,10 @@ const Destination = sequelize.define('Destination', {
     validate: {
       isUrl: {
         protocols: ['http', 'https'],
-        require_protocol: true
-      }
+        require_protocol: true,
+        require_valid_protocol: true
+      },
+      notEmpty: true
     }
   },
   httpMethod: {
@@ -26,7 +28,7 @@ const Destination = sequelize.define('Destination', {
     }
   },
   headers: {
-    type: DataTypes.JSON,
+    type: DataTypes.JSONB, // Using JSONB for better performance in some databases
     allowNull: false,
     defaultValue: {},
     validate: {
@@ -34,38 +36,51 @@ const Destination = sequelize.define('Destination', {
         if (typeof value !== 'object' || value === null || Array.isArray(value)) {
           throw new Error('Headers must be a key-value object');
         }
+        // Ensure Content-Type exists for non-GET methods
         if (this.httpMethod !== 'GET' && !value['Content-Type']) {
-          value['Content-Type'] = 'application/json'; // Set default Content-Type
+          value['Content-Type'] = 'application/json';
         }
       }
     }
   },
-  // Explicitly define the foreign key field
-  accountId: {
-    type: DataTypes.INTEGER, // Assuming Account uses INTEGER id
-    allowNull: false,
-    references: {
-      model: 'Accounts', // This should match your Account table name
-      key: 'id'
-    }
+accountId: {
+  type: DataTypes.STRING(24), // Must match Account's id type
+  allowNull: false,
+  references: {
+    model: 'Accounts',
+    key: 'id'
   }
+}
 }, {
   timestamps: true,
-  paranoid: true,
+  paranoid: true, // Enables soft deletion
   indexes: [
     {
-      fields: ['accountId'] // Index for better join performance
+      fields: ['accountId'],
+      name: 'destination_accountId_index'
+    },
+    {
+      fields: ['url', 'httpMethod'],
+      unique: true,
+      name: 'unique_destination_per_account'
     }
-  ]
+  ],
+  hooks: {
+    beforeValidate: (destination) => {
+      // Normalize URL by removing trailing slashes
+      if (destination.url) {
+        destination.url = destination.url.replace(/\/+$/, '');
+      }
+    }
+  }
 });
 
-// Corrected association
+// Enhanced association configuration
 Destination.associate = function(models) {
   Destination.belongsTo(models.Account, {
-    foreignKey: 'accountId', // Must match the field name above
-    targetKey: 'id', // References Account's primary key
-    onDelete: 'CASCADE',
-    hooks: true // Ensure cascading works with paranoid
+    foreignKey: 'accountId',
+    targetKey: 'id',
+    as: 'account'
   });
 };
 

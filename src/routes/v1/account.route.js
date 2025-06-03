@@ -5,8 +5,11 @@ const {
 } = require("../../controllers");
 
 const router = express.Router();
-
-router.post("/register", accountController.createAccount);
-router.get("/getall", accountController.getAllAccounts);
+// Account Routes
+router.post("/", accountController.createAccount);
+router.get("/", accountController.getAllAccounts);
+router.get("/:id", accountController.getAccount);
+router.patch("/:id", accountController.updateAccount);
+router.delete("/:id", accountController.deleteAccount);
 
 module.exports = router;

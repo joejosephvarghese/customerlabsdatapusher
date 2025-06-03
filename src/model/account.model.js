@@ -71,7 +71,8 @@ Account.associate = (models) => {
   Account.hasMany(models.Destination, {
     foreignKey: 'accountId',
     as: 'destinations',
-    onDelete: 'CASCADE' // Cascade delete destinations when account is deleted
+    onDelete: 'CASCADE', 
+    hooks: true 
   });
 };
 

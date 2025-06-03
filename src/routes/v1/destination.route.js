@@ -12,4 +12,19 @@ router.get(
   destinationController.getDestinationsForAccount
 );
 
+router.get(
+  "/destinations/:destinationId",
+  destinationController.getDestination
+);
+
+
+router.patch(
+  "/destinations/:destinationId",
+  destinationController.updateDestination
+);
+
+router.delete(
+  "/destinations/:destinationId",
+  destinationController.deleteDestination
+);
 module.exports = router;

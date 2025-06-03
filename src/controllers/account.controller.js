@@ -1,12 +1,13 @@
 const catchAsync = require("../utils/catchAsync");
-const { Account } = require("../model");
+const { Account,Destination } = require("../model");
 const { StatusCodes } = require("http-status-codes");
 const ApiError = require("../utils/apiError");
 const crypto = require("crypto");
 
-const generateSecretToken = () => `tok_${crypto.randomBytes(16).toString('hex')}`;
+const generateSecretToken = () =>
+  `tok_${crypto.randomBytes(16).toString("hex")}`;
 
-exports.createAccount = catchAsync(async (req, res) => {
+const createAccount = catchAsync(async (req, res) => {
   const { email, accountName, website } = req.body;
 
   if (!email || !accountName) {
@@ -33,8 +34,9 @@ exports.createAccount = catchAsync(async (req, res) => {
     data: { account: accountData },
   });
 });
+
 // Get All Accounts
-exports.getAllAccounts = catchAsync(async (req, res) => {
+const getAllAccounts = catchAsync(async (req, res) => {
   const accounts = await Account.findAll({});
   res.json({
     status: "success",
@@ -43,7 +45,7 @@ exports.getAllAccounts = catchAsync(async (req, res) => {
 });
 
 // Get Single Account
-exports.getAccount = catchAsync(async (req, res) => {
+const getAccount = catchAsync(async (req, res) => {
   const account = await Account.findByPk(req.params.id, {
     attributes: { exclude: ["appSecretToken"] },
   });
@@ -57,7 +59,7 @@ exports.getAccount = catchAsync(async (req, res) => {
 });
 
 // Update Account
-exports.updateAccount = catchAsync(async (req, res) => {
+const updateAccount = catchAsync(async (req, res) => {
   const [updated] = await Account.update(req.body, {
     where: { id: req.params.id },
     returning: true,
@@ -78,18 +80,31 @@ exports.updateAccount = catchAsync(async (req, res) => {
   });
 });
 
-// Delete Account
-exports.deleteAccount = catchAsync(async (req, res) => {
-  const deleted = await Account.destroy({
-    where: { id: req.params.id },
-  });
+const deleteAccount = catchAsync(async (req, res) => {
+  const accountId = req.params.id;
 
-  if (!deleted) {
+  const account = await Account.findByPk(accountId);
+  if (!account) {
     throw new ApiError(404, "Account not found");
   }
+
+  await Destination.destroy({
+    where: { accountId: accountId },
+  });
+
+  await account.destroy();
 
   res.status(204).json({
     status: "success",
     data: null,
   });
 });
+
+module.exports = {
+  createAccount,
+  getAllAccounts,
+  getAccount,
+  updateAccount,
+  deleteAccount,
+  generateSecretToken,
+};
