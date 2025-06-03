@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Environment varibales
+.env*
+!.env*.example
+
+# Code coverage
+coverage/
+
+# Firebase & lock files
+firebase.json
+package-lock.json
+yarn.lock
+
+# Database files (SQLite)
+*.sqlite
+*.sqlite-journal
+*.db
+*.db3
