@@ -7,6 +7,8 @@ const accountRoute = require("./account.route");
 
 const destinationRoute = require("./destination.route");
 
+const incomingRoute = require("./incoming.route");
+
 const defaultRoutes = [
  {
     path: "/accounts",
@@ -16,6 +18,11 @@ const defaultRoutes = [
    {
     path: "/destination",
     route: destinationRoute,
+  },
+
+  {
+    path: "/incoming_data",
+    route: incomingRoute,
   },
 ];
 
