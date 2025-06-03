@@ -30,3 +30,33 @@ It receives JSON payloads for a specific account (authenticated via a secret tok
 
 ## 📁 Project Structure
 
+
+---
+
+## 📌 Modules & Features
+
+### 1. 🔐 Account Module
+
+Each account contains:
+- `account_id` (UUID - auto generated)
+- `email` (Unique & Mandatory)
+- `name` (Mandatory)
+- `app_secret_token` (Generated automatically)
+- `website` (Optional)
+
+### 2. 🎯 Destination Module
+
+Each destination belongs to an account and has:
+- `url` (Mandatory)
+- `http_method` (Mandatory: GET/POST/PUT)
+- `headers` (Mandatory, stored as key-value pairs)
+
+Example headers:
+```json
+{
+  "APP_ID": "1234APPID1234",
+  "APP_SECRET": "enwdj3bshwer43bjhjs9ereuinkjcnsiurew8s",
+  "ACTION": "user.update",
+  "Content-Type": "application/json",
+  "Accept": "*"
+}
