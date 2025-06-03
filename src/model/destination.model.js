@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('./connection');
-
+const paginate = require('./plugin/paginate.plugin'); // Adjust path as needed
 const Destination = sequelize.define('Destination', {
   id: {
     type: DataTypes.INTEGER,
@@ -83,5 +83,5 @@ Destination.associate = function(models) {
     as: 'account'
   });
 };
-
+paginate(Destination);
 module.exports = Destination;

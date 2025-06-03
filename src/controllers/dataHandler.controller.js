@@ -1,18 +1,18 @@
 const catchAsync = require("../utils/catchAsync");
 const { Account, Destination } = require("../model");
 const ApiError = require("../utils/apiError");
-const axios = require("axios");
 
+const axios = require("axios");
 
 const handleIncomingData = catchAsync(async (req, res) => {
   const token = req.headers["cl-x-token"];
 
   if (!token) {
-    throw new ApiError(401, "Un Authenticate" );
+    throw new ApiError(401, "Un Authenticate");
   }
 
   if (!req.is("application/json")) {
-    throw new ApiError(400,  "Invalid Data" );
+    throw new ApiError(400, "Invalid Data");
   }
 
   // Step 1: Find account
@@ -21,7 +21,7 @@ const handleIncomingData = catchAsync(async (req, res) => {
   });
 
   if (!account) {
-    throw new ApiError(404,  "Account not found" );
+    throw new ApiError(404, "Account not found");
   }
 
   // Step 2: Find destinations
@@ -33,7 +33,7 @@ const handleIncomingData = catchAsync(async (req, res) => {
 
   // Step 3: Forward data
   const forwardingResults = await Promise.allSettled(
-    destinations.map(destination =>
+    destinations.map((destination) =>
       forwardToDestination(destination, req.body)
     )
   );
@@ -54,7 +54,6 @@ const handleIncomingData = catchAsync(async (req, res) => {
     },
   });
 });
-
 
 /**
  * Helper function to forward data to a single destination

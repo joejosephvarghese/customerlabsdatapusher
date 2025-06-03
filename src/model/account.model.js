@@ -2,6 +2,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('./connection');
 const crypto = require('crypto');
+const paginate = require('./plugin/paginate.plugin'); 
 
 const generateObjectId = () => {
   return crypto.randomBytes(12).toString('hex');
@@ -75,5 +76,5 @@ Account.associate = (models) => {
     hooks: true 
   });
 };
-
+paginate(Account);
 module.exports = Account;

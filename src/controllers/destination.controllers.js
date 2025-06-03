@@ -1,6 +1,7 @@
 const { Account, Destination } = require("../model");
 const ApiError = require("../utils/apiError");
 const catchAsync = require("../utils/catchAsync");
+const { StatusCodes } = require("http-status-codes");
 
 // Create Destination
 const createDestination = catchAsync(async (req, res) => {
@@ -18,35 +19,30 @@ const createDestination = catchAsync(async (req, res) => {
     headers,
     accountId: account.id,
   });
-  console.log(newDestination, "newdestination");
 
   const destinationData = newDestination.get({ plain: true });
 
-  res.status(201).json({
-    status: "success",
-    data: {
-      destination: destinationData,
-    },
-  });
+  res.status(StatusCodes.CREATED).json({ result: destinationData });
 });
 
 // Get All Destinations for Account
 const getDestinationsForAccount = catchAsync(async (req, res) => {
+  const { page, limit } = req.query;
+  let filter = {};
+  let options = {
+    page,
+    limit,
+  };
   const { accountId } = req.params;
 
   const account = await Account.findOne({ where: { id: accountId } });
   if (!account) {
     throw new ApiError(404, "Account not found");
   }
+  filter = { accountId: account.id };
+  const destinations = await Destination.paginate(filter, options);
 
-  const destinations = await Destination.findAll({
-    where: { accountId: account.id },
-  });
-
-  res.json({
-    status: "success",
-    data: { destinations },
-  });
+  res.status(StatusCodes.OK).json(destinations);
 });
 
 // Get Single Destination

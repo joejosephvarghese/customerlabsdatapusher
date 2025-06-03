@@ -1,5 +1,5 @@
 const catchAsync = require("../utils/catchAsync");
-const { Account,Destination } = require("../model");
+const { Account, Destination } = require("../model");
 const { StatusCodes } = require("http-status-codes");
 const ApiError = require("../utils/apiError");
 const crypto = require("crypto");
@@ -29,19 +29,20 @@ const createAccount = catchAsync(async (req, res) => {
   const accountData = newAccount.get();
   delete accountData.appSecretToken;
 
-  res.status(StatusCodes.OK).json({
-    status: "success",
-    data: { account: accountData },
-  });
+  res.status(StatusCodes.OK).json({ result: accountData });
 });
 
 // Get All Accounts
 const getAllAccounts = catchAsync(async (req, res) => {
-  const accounts = await Account.findAll({});
-  res.json({
-    status: "success",
-    data: { accounts },
-  });
+  const { page, limit } = req.query;
+  let filter = {};
+  let options = {
+    page,
+    limit,
+  };
+
+  const accounts = await Account.paginate(filter, options);
+  res.status(StatusCodes.OK).json(accounts);
 });
 
 // Get Single Account
@@ -52,10 +53,7 @@ const getAccount = catchAsync(async (req, res) => {
   if (!account) {
     throw new ApiError(404, "Account not found");
   }
-  res.json({
-    status: "success",
-    data: { account },
-  });
+  res.status(StatusCodes.OK).json(account);
 });
 
 // Update Account
@@ -74,10 +72,7 @@ const updateAccount = catchAsync(async (req, res) => {
     attributes: { exclude: ["appSecretToken"] },
   });
 
-  res.json({
-    status: "success",
-    data: { account: updatedAccount },
-  });
+  res.status(StatusCodes.OK).json(updatedAccount);
 });
 
 const deleteAccount = catchAsync(async (req, res) => {
@@ -94,10 +89,7 @@ const deleteAccount = catchAsync(async (req, res) => {
 
   await account.destroy();
 
-  res.status(204).json({
-    status: "success",
-    data: null,
-  });
+  res.status(StatusCodes.NO_CONTENT).json({ message: "OK" });
 });
 
 module.exports = {
