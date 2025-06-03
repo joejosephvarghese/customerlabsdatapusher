@@ -13,8 +13,3 @@ firebase.json
 package-lock.json
 yarn.lock
 
-# Database files (SQLite)
-*.sqlite
-*.sqlite-journal
-*.db
-*.db3
