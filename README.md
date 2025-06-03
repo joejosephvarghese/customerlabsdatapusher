@@ -1,62 +1,56 @@
 # 🚀 Data Pusher – Node.js Developer Assessment
 
-An Express-based Node.js application designed to **receive and route JSON data** from accounts to multiple destination webhooks via custom HTTP configurations. This project is a developer assessment with full CRUD operations and secure data handling using secret tokens.
+## 📜 Description
+
+**Data Pusher** is a Node.js-based backend application built using **Express.js** and **SQLite**. It allows receiving JSON data from multiple accounts and securely forwards it to pre-configured destinations using webhooks.
+
+This project demonstrates secure data handling, RESTful API design, and real-time data forwarding as part of a Node.js developer assessment.
 
 ---
 
-## 📦 Overview
+## 🌟 Features
 
-This project implements an Express web server with:
+👤 **Account management:** Create and manage unique accounts with secret tokens.
 
-- **Account Management**
-- **Webhook Destination Configuration**
-- **Secure Data Routing**
-- **SQLite-based Persistence**
+🌐 **Destination configuration:** Configure multiple webhook destinations per account.
 
-It receives JSON payloads for a specific account (authenticated via a secret token) and pushes the data to multiple destinations configured under that account.
+🔒 **Secure routing:** Authenticate using tokens before routing data.
 
----
+📤 **Dynamic data push:** Automatically forwards JSON data to all matching destinations.
 
-## 🛠️ Technologies Used
-
-- Node.js (Latest LTS)
-- Express.js
-- SQLite (via Sequelize ORM)
-- Axios (HTTP client)
-- dotenv (for environment management)
-- UUID (for generating unique IDs and tokens)
+📄 **RESTful APIs:** Fully featured CRUD operations for accounts and destinations.
 
 ---
 
-## 📁 Project Structure
+## 🛠 Technologies Used
 
+🟩 **Node.js:** JavaScript runtime built on Chrome’s V8 engine.
+
+⚙️ **Express.js:** Minimalist web framework for Node.js.
+
+📦 **SQLite:** Lightweight SQL database engine (via Sequelize ORM).
+
+🔁 **Axios:** HTTP client used for sending requests to webhook destinations.
+
+🔐 **dotenv:** Loads environment variables from a `.env` file.
+
+🆔 **UUID:** For generating unique account IDs and secret tokens.
 
 ---
 
-## 📌 Modules & Features
+## 📋 Prerequisites
 
-### 1. 🔐 Account Module
+Ensure you have the following installed on your system:
 
-Each account contains:
-- `account_id` (UUID - auto generated)
-- `email` (Unique & Mandatory)
-- `name` (Mandatory)
-- `app_secret_token` (Generated automatically)
-- `website` (Optional)
+- 🟢 **Node.js** (Latest LTS recommended)
+- 📦 **npm** (Comes with Node.js)
 
-### 2. 🎯 Destination Module
+---
 
-Each destination belongs to an account and has:
-- `url` (Mandatory)
-- `http_method` (Mandatory: GET/POST/PUT)
-- `headers` (Mandatory, stored as key-value pairs)
+## ⚙️ Configuration
 
-Example headers:
-```json
-{
-  "APP_ID": "1234APPID1234",
-  "APP_SECRET": "enwdj3bshwer43bjhjs9ereuinkjcnsiurew8s",
-  "ACTION": "user.update",
-  "Content-Type": "application/json",
-  "Accept": "*"
-}
+Create a `.env` file in the project root directory and add:
+
+```env
+PORT=3000
+NODE_ENV=development
