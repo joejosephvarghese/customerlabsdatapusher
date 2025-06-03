@@ -3,13 +3,9 @@ const { Account } = require("../model");
 const { StatusCodes } = require("http-status-codes");
 const ApiError = require("../utils/apiError");
 const crypto = require("crypto");
-const sequelize = require("../model/connection");
 
-const generateAccountId = () => `acc_${crypto.randomBytes(8).toString("hex")}`;
-const generateSecretToken = () =>
-  `tok_${crypto.randomBytes(16).toString("hex")}`;
+const generateSecretToken = () => `tok_${crypto.randomBytes(16).toString('hex')}`;
 
-// Create Account
 exports.createAccount = catchAsync(async (req, res) => {
   const { email, accountName, website } = req.body;
 
@@ -26,19 +22,17 @@ exports.createAccount = catchAsync(async (req, res) => {
     email,
     accountName,
     website,
-    accountId: generateAccountId(),
     appSecretToken: generateSecretToken(),
   });
 
   const accountData = newAccount.get();
   delete accountData.appSecretToken;
 
-  res.status(201).json({
+  res.status(StatusCodes.OK).json({
     status: "success",
     data: { account: accountData },
   });
 });
-
 // Get All Accounts
 exports.getAllAccounts = catchAsync(async (req, res) => {
   const accounts = await Account.findAll({});

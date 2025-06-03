@@ -1,11 +1,23 @@
+
 const { DataTypes } = require('sequelize');
 const sequelize = require('./connection');
+const crypto = require('crypto');
+
+const generateObjectId = () => {
+  return crypto.randomBytes(12).toString('hex');
+};
+
+
 
 const Account = sequelize.define('Account', {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING(24), // MongoDB ObjectIDs are 24-character hex strings
     primaryKey: true,
-    autoIncrement: true
+    allowNull: false,
+    defaultValue: generateObjectId,
+    validate: {
+      is: /^[0-9a-fA-F]{24}$/ 
+    }
   },
   email: {
     type: DataTypes.STRING,
@@ -14,11 +26,6 @@ const Account = sequelize.define('Account', {
     validate: {
       isEmail: true
     }
-  },
-  accountId: {
-    type: DataTypes.STRING,
-    unique: true,
-    allowNull: false
   },
   accountName: {
     type: DataTypes.STRING,

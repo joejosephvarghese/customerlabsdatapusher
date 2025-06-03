@@ -5,10 +5,17 @@ const router = express.Router();
 
 const accountRoute = require("./account.route");
 
+const destinationRoute = require("./destination.route");
+
 const defaultRoutes = [
  {
     path: "/accounts",
     route: accountRoute,
+  },
+
+   {
+    path: "/destination",
+    route: destinationRoute,
   },
 ];
 
